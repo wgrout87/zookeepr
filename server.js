@@ -13,7 +13,7 @@ function filterByQuery(query, animalsArray) {
     if (query.personalityTraits) {
         // Save personalityTraits as a dedicated array.
         // If personalityTraits is a string, place it into a new array and save.
-        if (typeof query.personalityTraits === 'string') {
+        if (typeof query.personalityTraits === "string") {
             personalityTraitsArray = [query.personalityTraits];
         } else {
             personalityTraitsArray = query.personalityTraits;
@@ -45,12 +45,26 @@ function filterByQuery(query, animalsArray) {
     return filteredResults;
 }
 
+function findById(id, animalsArray) {
+    const result = animalsArray.filter(animal => animal.id === id)[0];
+    return result;
+}
+
 app.get("/api/animals", (req, res) => {
     let results = animals;
     if (req.query) {
         results = filterByQuery(req.query, results);
     }
     res.json(results);
+});
+
+app.get("/api/animals/:id", (req, res) => {
+    const result = findById(req.params.id, animals);
+    if (result) {
+        res.json(result);
+    } else {
+        res.send(404);
+    }
 });
 
 app.listen(PORT, () => {
